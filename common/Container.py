@@ -12,11 +12,14 @@ class Container(object):
     PATH = os.getcwd() + '\\'
 
     # 申报与反馈接口
-    DECLARE_BASE_URL = 'http://shenbao.com/server/shenbao/index.php'
-    # DECLARE_BASE_URL = 'http://caiwu.leesrobots.com:50082/server/shenbao'
+    # DECLARE_BASE_URL = 'http://shenbao.com/server/shenbao/index.php'
+    DECLARE_BASE_URL = 'http://caiwu.leesrobots.com:50082/server/shenbao'
     # DECLARE_BASE_URL = 'http://fi-test.0tb.cn/server/shenbao'
-    DECLARE_IN_QUEUE_URL = DECLARE_BASE_URL + '/in_queue'  # 查询path
-    DECLARE_FEEDBACK_URL = DECLARE_BASE_URL + '/feedback'  # 反馈path
+    DECLARE_IN_QUEUE_URL = DECLARE_BASE_URL + '/in_queue_v2'  # 查询path
+    DECLARE_FEEDBACK_URL = DECLARE_BASE_URL + '/feedback_v2'  # 反馈path
+
+    # 心跳地址
+    HEARTBEAT_URL = 'http://caiwu.leesrobots.com:50082/server/shenbao'
 
     # 短信验证码接口
     PHONE_CODE_BASE_URL = 'http://47.98.117.190'
@@ -57,6 +60,35 @@ class Container(object):
     TASK_TYPE_IDENTIFY = 4  # 税种鉴定
     TASK_TYPE_INIT = 5  # 自动初始化
     TASK_TYPE_CANCEL = 6  # 作废
+
+    TASK_TYPE_STATUS_MAP = {
+        TASK_TYPE_PAYMENT: {
+            'success': 0,
+            'failed': 0,
+            'except': 0
+        },
+        TASK_TYPE_DECLARE: {
+            'success': 0,
+            'failed': 0,
+            'except': 0
+        },
+        TASK_TYPE_CHECK: {
+            'passed': 6,
+            'all_not_declare': 4,
+            'part_not_declare': 5,
+            'exception': 3
+        },
+        TASK_TYPE_INIT: {
+            'success': 5,
+            'failed': 4,
+            'except': 3
+        },
+        TASK_TYPE_IDENTIFY: {
+            'success': 5,
+            'failed': 4,
+            'except': 3
+        }
+    }
 
     # queue表状态（反馈的status）
     TASK_RETURN_SUCCESS = 5
@@ -130,12 +162,15 @@ class Container(object):
         }
     }
 
+    # 是否为测试环境
+    IS_TESTING = True
+
     """""""""""""""""""""""""""""""""""
     """"""""""""自定义部分""""""""""""""
     """""""""""""""""""""""""""""""""""
     # 税网的
-    PAGE_LOGIN_URL = 'https://etaxs.sn-n-tax.gov.cn/sso/login?service=http://etaxs.sn-n-tax.gov.cn/xxmh/html/index_login.html'
-    PAGE_HOME_URL = 'https://etaxs.sn-n-tax.gov.cn/xxmh/html/index_login.html'
+    PAGE_LOGIN_URL = 'https://etax.gansu.chinatax.gov.cn/bszm-web/apps/views/beforeLogin/indexBefore/pageIndex.html'
+    PAGE_HOME_URL = 'https://etax.gansu.chinatax.gov.cn/bszm-web/apps/views/companyPage/desktopTax.html?service=https://etax.gansu.chinatax.gov.cn/bszm-web/apps/views/companyPage/desktopTax.html'
 
     # 申报税种在税网上对应的名字
     TAX_NAME_MAP = {
@@ -160,6 +195,10 @@ class Container(object):
     COMMON_DATA = None  # 报税的公共参数，包含税号、账号、密码、队列类型、队列id
     TASK_DATA = None  # 关联任务的相关信息，申报的季报月报类型、检查的id等
     FEEDBACK = None  # 反馈数据结构
+    TAX_INIT_DATA = dict()  # 税种初始化的
+    IDENTIFY_INFO = list()  # 税种鉴定的数据
+    CHECK_INFO = list()  # 申报检查的数据
+    RELATION_STATUS = 0  # queue队列关联的任务状态，在各自的任务类中设置
 
     """""""""""""""""""""""""""""""""""
     """""""""""""其他"""""""""""""""""""

@@ -4,6 +4,7 @@
 import win32api
 import win32con
 import win32gui
+import win32clipboard
 from ctypes import *
 import time
 
@@ -320,4 +321,18 @@ class Analog(object):
         elif isinstance(color, int):
             color = (color & 0xff, (color >> 8) & 0xff, (color >> 16) & 0xff)
         return color
+
+    @staticmethod
+    def set_clipboard(text):
+        win32clipboard.OpenClipboard()
+        win32clipboard.EmptyClipboard()
+        win32clipboard.SetClipboardText(text)
+        win32clipboard.CloseClipboard()
+
+    @staticmethod
+    def get_clipboard():
+        win32clipboard.OpenClipboard()
+        data = win32clipboard.GetClipboardData()
+        win32clipboard.CloseClipboard()
+        return data
 
